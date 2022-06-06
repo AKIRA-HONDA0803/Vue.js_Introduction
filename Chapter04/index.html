@@ -8,6 +8,7 @@
     <div id="app">
       <router-link to="/top">トップページ</router-link>
       <router-link to="/users">ユーザー一覧ページ</router-link>
+      <router-link :to="{ name: 'user', params: { userId:123 }}">ユーザー詳細ページ</router-link>
       <router-view></router-view>
     </div>
     <!-- Vue.js本体とVue Routerの読み込み -->
@@ -29,6 +30,13 @@
           path: '/users',
           component: {
             template: '<div>ユーザー一覧です</div>'
+          }
+        },
+        {
+          path: '/user/:userId',
+          name: 'user',
+          component: {
+            template: '<div>ユーザーIDは{{ $route.params.userId }}です。'
           }
         }
       ]
