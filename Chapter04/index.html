@@ -24,12 +24,40 @@
           {{ error }}
         </div>
         <div v-for="user in users" :key="user.id">
+          <router-link :to="{ path: '/users/' + user.id }">
+            {{ user.name }}
+          </router-link>
+        </div>
+      </div>
+    </script>
+
+    <!-- ユーザー詳細ページ -->
+    <script type="text/x-template" id="user-detail">
+      <div>
+        <div class="loading" v-if="loading">読み込み中...</div>
+        <div v-if="error" class="error">
+          {{ error }}
+        </div>
+        <div v-if="user">
           <h2>{{ user.name }}</h2>
+          <p>{{ user.description }}</p>
         </div>
       </div>
     </script>
 
     <script>
+      var userData = [
+        {
+          id: 1,
+          name: 'Takuya tejima',
+          description: '東南アジアで働くエンジニアです。'
+        },
+        {
+          id:2,
+          name: 'Yohei Noda',
+          description: 'アウトドア・フットサルが趣味のエンジニアです。'
+        }
+      ]
       // APIによるデータ通信
       var getUsers = function (callback) {
         setTimeout(function () {
@@ -43,6 +71,15 @@
               name: 'Yohei Noda'
             }
           ])
+        }, 1000)
+      }
+      // 擬似的にAPI経由で情報を取得する
+      var getUser = function (userId, callback) {
+        setTimeout(function () {
+          var filteredUsers = userData.filter(function (user) {
+            return user.id === parseInt(userId, 10)
+          })
+          callback(null, filteredUsers && filteredUsers[0])
         }, 1000)
       }
       // ユーザーリストコンポーネント
@@ -75,6 +112,36 @@
           }
         }
       }
+      // ユーザー詳細コンポーネント
+      var UserDetail = {
+        template: '#user-detail',
+        data: function () {
+          return {
+            loading: false,
+            user: null,
+            error: null
+          }
+        },
+        created: function () {
+          this.fetchData()
+        },
+        watch: {
+          '$route': 'fetchData'
+        },
+        methods: {
+          fetchData: function () {
+            this.loading = true
+            getUser(this.$route.params.userId, (function (err, user) {
+              this.loading = false
+              if (err) {
+                this.error = err.toString()
+              } else {
+                this.user = user
+              }
+            }).bind(this))
+          }
+        }
+      }
       // ルートオプションを渡してルーターインスタンスを生成
       var router = new VueRouter({
         // 各コンポーネントをマッピング
@@ -89,6 +156,10 @@
           {
             path: '/users',
             component: UserList
+          },
+          {
+            path: '/users/:userId',
+            component: UserDetail
           }
         ]
       })
