@@ -122,16 +122,7 @@
       // APIによるデータ通信
       var getUsers = function (callback) {
         setTimeout(function () {
-          callback(null, [
-            {
-              id : 1,
-              name: 'Takuya Tejima'
-            },
-            {
-              id: 2,
-              name: 'Yohei Noda'
-            }
-          ])
+          callback(null, userData)
         }, 1000)
       }
       // 擬似的にAPI経由で情報を取得する
