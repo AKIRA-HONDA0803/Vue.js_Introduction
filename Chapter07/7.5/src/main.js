@@ -4,6 +4,9 @@ import store from './store'
 
 new Vue({
   el: '#app',
+
+  // コンポーネントからストアを利用できるようにする
   store,
+
   render: h => h(App)
 })
