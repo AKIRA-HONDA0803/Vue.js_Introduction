@@ -6,7 +6,18 @@ import mutations from './mutation'
 
 Vue.use(Vuex)
 
+const state = {
+  auth: {
+    token: null,
+    userId: null
+  },
+  board: {
+    lists: []
+  }
+}
+
 export default new Vue.Store({
+  state,
   getters,
   actions,
   mutations,
